@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>笑点制造机｜AI 四格漫画 · 每天一个反转</title>
+  <meta name="description" content="笑点制造机，一个由 AI 辅助创作的四格漫画笑话网站。每天更新，用反转制造笑点。" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont;
+      background: #f5f5f5;
+      color: #222;
+    }
+
+    header {
+      padding: 32px 20px;
+      text-align: center;
+      background: #ffffff;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 32px;
+    }
+
+    header p {
+      margin-top: 10px;
+      color: #666;
+      font-size: 16px;
+    }
+
+    main {
+      max-width: 960px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .comic-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .comic-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .comic-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    }
+
+    .thumb {
+      height: 140px;
+      background: #eee;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .comic-card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+
+    .comic-card p {
+      margin: 0;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .comic-card a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+      padding: 30px 20px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>笑点制造机</h1>
+  <p>算法在打工，笑点在下班 · 每天一条四格漫画</p>
+</header>
+
+<main>
+  <section class="comic-list">
+
+    <!-- 漫画卡片 1 -->
+    <div class="comic-card">
+      <a href="./comics/comic-001.html">
+        <div class="thumb">四格漫画预览</div>
+        <h3>程序员的测试</h3>
+        <p>主题：程序员 · 反转型笑话</p>
+      </a>
+    </div>
+
+    <!-- 漫画卡片 2（示例） -->
+    <div class="comic-card">
+      <a href="./comics/comic-002.html">
+        <div class="thumb">四格漫画预览</div>
+        <h3>需求真的很简单</h3>
+        <p>主题：职场 · 客户需求</p>
+      </a>
+    </div>
+
+    <!-- 以后新增漫画，只需要复制一个 comic-card -->
+    
+  </section>
+</main>
+
+<footer>
+  © 笑点制造机 · AI 辅助创作 · 仅供娱乐
+</footer>
+
+</body>
+</html>
