@@ -7,6 +7,14 @@
       "img": "img/comic-001-4grid.png",
       "html": "comics/comic-001.html",
       "create_time": "2026-01-10 22:02:27"
+    },
+    {
+      "id": "comic-002",
+      "title": "test",
+      "topic": "joketest",
+      "img": "img/comic-002-4grid.png",
+      "html": "comics/comic-002.html",
+      "create_time": "2026-01-10 22:08:20"
     }
   ]
 }
