@@ -1,0 +1,12 @@
+{
+  "comics": [
+    {
+      "id": "comic-001",
+      "title": "程序员的测试",
+      "topic": "反转型笑话",
+      "img": "img/comic-001-4grid.png",
+      "html": "comics/comic-001.html",
+      "create_time": "2026-01-10 22:02:27"
+    }
+  ]
+}
