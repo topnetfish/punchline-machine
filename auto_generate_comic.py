@@ -74,6 +74,7 @@ def get_comic_meta(comic_id_num, meta_file_path=None):
 
             # 尝试从模板补全缺失字段
             template = get_template(category, sub_category)
+            print(f"- test----模板：{template}\n- 分类：{category}\n")
             if template:
                 title = meta_data.get("title", template["default_title"])
                 topic = meta_data.get("topic", template["default_topic"])
