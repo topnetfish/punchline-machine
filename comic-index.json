@@ -87,6 +87,17 @@
       "img": "img/comic-009-1.png",
       "html": "comics/comic-009.html",
       "create_time": "2026-01-11 10:48:31"
+    },
+    {
+      "id": "comic-010",
+      "title": "课间小游戏翻车",
+      "topic": "石头剪刀布",
+      "category": "生活日常",
+      "sub_topic": "居家日常",
+      "funny_example": "简单有趣的日常小笑点",
+      "img": "img/comic-010-1.png",
+      "html": "comics/comic-010.html",
+      "create_time": "2026-01-11 10:51:04"
     }
   ]
 }

@@ -71,7 +71,7 @@ def get_comic_meta(comic_id_num, meta_file_path=None):
 
             category = meta_data.get("category", DEFAULT_CATEGORY)
             sub_category = meta_data.get("sub_category", DEFAULT_SUB_CATEGORY)
-            print(f"- test----主分类：{category}\n- 子主题：{sub_category}\n")
+
             # 尝试从模板补全缺失字段
             template = get_template(category, sub_category)
             if template:
@@ -79,6 +79,7 @@ def get_comic_meta(comic_id_num, meta_file_path=None):
                 topic = meta_data.get("topic", template["default_topic"])
                 sub_topic = meta_data.get("sub_topic", template["sub_topic"])
                 funny_example = meta_data.get("funny_example", template["funny_example"])
+                print(f"- test----主分类：{category}\n- 主题：{title}\n")
             else:
                 # 无模板时用自定义值/默认值
                 title = meta_data.get("title", f"趣味四格漫画-{comic_id_num}")
