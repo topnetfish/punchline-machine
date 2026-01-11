@@ -23,6 +23,15 @@
       "img": "img/comic-003-1.png",
       "html": "comics/comic-003.html",
       "create_time": "2026-01-11 09:55:24"
+    },
+    {
+      "id": "comic-004",
+      "title": "趣味四格漫画-004",
+      "topic": "日常·搞笑·轻松一刻",
+      "category": "生活日常",
+      "img": "img/comic-004-1.png",
+      "html": "comics/comic-004.html",
+      "create_time": "2026-01-11 10:08:37"
     }
   ]
 }
