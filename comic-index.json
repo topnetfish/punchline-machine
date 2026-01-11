@@ -120,6 +120,17 @@
       "img": "img/comic-012-1.png",
       "html": "comics/comic-012.html",
       "create_time": "2026-01-11 10:53:21"
+    },
+    {
+      "id": "comic-013",
+      "title": "课间小游戏翻车",
+      "topic": "石头剪刀布",
+      "category": "校园",
+      "sub_topic": "课间小游戏翻车",
+      "funny_example": "玩 “石头剪刀布” 输了，被罚表演，结果紧张忘词",
+      "img": "img/comic-013-1.png",
+      "html": "comics/comic-013.html",
+      "create_time": "2026-01-11 10:58:43"
     }
   ]
 }

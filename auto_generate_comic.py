@@ -80,7 +80,7 @@ def get_comic_meta(comic_id_num, meta_file_path=None):
                 topic = meta_data.get("topic", template["default_topic"])
                 sub_topic = meta_data.get("sub_topic", template["sub_topic"])
                 funny_example = meta_data.get("funny_example", template["funny_example"])
-                print(f"- test----主分类：{category}\n- 主题：{title}\n")
+                #print(f"- test----主分类：{category}\n- 主题：{title}\n")
             else:
                 # 无模板时用自定义值/默认值
                 title = meta_data.get("title", f"趣味四格漫画-{comic_id_num}")
@@ -123,84 +123,84 @@ def generate_comic_html(comic_id, title, topic, category, sub_topic, funny_examp
     img_html = "".join([f'<img src="../{p}" alt="{title}" class="comic-img">' for p in img_paths])
 
     html_template = f"""
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <title>{title} - 笑点制造机</title>
-    <style>
-        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
-        body {{ 
-            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
-            background: #f5f5f5; 
-            color: #333;
-        }}
-        .container {{ 
-            max-width: 800px; 
-            margin: 0 auto; 
-            padding: 40px 20px; 
-        }}
-        .back-btn {{ 
-            display: inline-block; 
-            padding: 8px 16px; 
-            background: #333; 
-            color: white; 
-            text-decoration: none; 
-            border-radius: 4px; 
-            margin-bottom: 30px;
-            font-size: 14px;
-        }}
-        .back-btn:hover {{ background: #555; }}
-        h1 {{ 
-            font-size: 28px; 
-            margin-bottom: 10px; 
-            font-weight: 600;
-        }}
-        .meta-info {{
-            color: #666;
-            font-size: 16px;
-            margin-bottom: 30px;
-            line-height: 1.8;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }}
-        .meta-info .label {{
-            color: #333;
-            font-weight: 500;
-            display: inline-block;
-            width: 80px;
-        }}
-        .comic-img {{ 
-            width: 100%; 
-            border-radius: 8px; 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }}
-        .footer {{
-            text-align: center;
-            margin-top: 40px;
-            color: #999;
-            font-size: 14px;
-        }}
-    </style>
-</head>
-<body>
-    <div class="container">
-        <a href="../index.html" class="back-btn">← 返回笑点制造机</a>
-        <h1>{title}</h1>
-        <div class="meta-info">
-            <div><span class="label">主分类：</span>{category}</div>
-            <div><span class="label">子主题：</span>{sub_topic}</div>
-            <div><span class="label">核心笑点：</span>{funny_example}</div>
-            <div><span class="label">主题标签：</span>{topic}</div>
+    <!DOCTYPE html>
+    <html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <title>{title} - 笑点制造机</title>
+        <style>
+            * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+            body {{ 
+                font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+                background: #f5f5f5; 
+                color: #333;
+            }}
+            .container {{ 
+                max-width: 800px; 
+                margin: 0 auto; 
+                padding: 40px 20px; 
+            }}
+            .back-btn {{ 
+                display: inline-block; 
+                padding: 8px 16px; 
+                background: #333; 
+                color: white; 
+                text-decoration: none; 
+                border-radius: 4px; 
+                margin-bottom: 30px;
+                font-size: 14px;
+            }}
+            .back-btn:hover {{ background: #555; }}
+            h1 {{ 
+                font-size: 28px; 
+                margin-bottom: 10px; 
+                font-weight: 600;
+            }}
+            .meta-info {{
+                color: #666;
+                font-size: 16px;
+                margin-bottom: 30px;
+                line-height: 1.8;
+                background: white;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            }}
+            .meta-info .label {{
+                color: #333;
+                font-weight: 500;
+                display: inline-block;
+                width: 80px;
+            }}
+            .comic-img {{ 
+                width: 100%; 
+                border-radius: 8px; 
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                margin-bottom: 20px;
+            }}
+            .footer {{
+                text-align: center;
+                margin-top: 40px;
+                color: #999;
+                font-size: 14px;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <a href="../index.html" class="back-btn">← 返回笑点制造机</a>
+            <h1>{title}</h1>
+            <div class="meta-info">
+                <div><span class="label">主分类：</span>{category}</div>
+                <div><span class="label">子主题：</span>{sub_topic}</div>
+                <div><span class="label">核心笑点：</span>{funny_example}</div>
+                <div><span class="label">主题标签：</span>{topic}</div>
+            </div>
+            {img_html}
+            <div class="footer">© 笑点制造机 · AI辅助创作 · 仅供娱乐</div>
         </div>
-        {img_html}
-        <div class="footer">© 笑点制造机 · AI辅助创作 · 仅供娱乐</div>
-    </div>
-</body>
-</html>
+    </body>
+    </html>
     """
     with open(html_path, "w", encoding="utf-8") as f:
         f.write(html_template.strip())
