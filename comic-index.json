@@ -142,6 +142,19 @@
       "img": "img/comic-014-1.png",
       "html": "comics/comic-014.html",
       "create_time": "2026-01-11 12:45:00"
+    },
+    {
+      "id": "comic-015",
+      "title": "亲子搞笑",
+      "topic": "妈妈叫小明洗碗，小明说：“我有高科技洗碗机”，结果把空洗碗机当盆洗衣服，妈妈回头看到满水的碗，差点晕倒音",
+      "category": "生活日常",
+      "sub_topic": "居家日常",
+      "funny_example": "简单有趣的日常小笑点",
+      "img": "img/comic-015-1.gif",
+      "html": "comics/comic-015.html",
+      "img_count": 1,
+      "has_gif": true,
+      "create_time": "2026-01-11 22:26:59"
     }
   ]
 }
