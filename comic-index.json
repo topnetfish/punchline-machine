@@ -15,6 +15,14 @@
       "img": "img/comic-002-4grid.png",
       "html": "comics/comic-002.html",
       "create_time": "2026-01-10 22:08:20"
+    },
+    {
+      "id": "comic-003",
+      "title": "初中校园笑话-003",
+      "topic": "初中·校园生活·搞笑误会",
+      "img": "img/comic-003-1.png",
+      "html": "comics/comic-003.html",
+      "create_time": "2026-01-11 09:55:24"
     }
   ]
 }

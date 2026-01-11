@@ -3,16 +3,23 @@ import json
 import shutil
 import subprocess
 import time
+import glob
 from PIL import Image  # 可选，用于图片压缩
 
-# ===================== 配置项（根据你的需求修改） =====================
-AI_COMIC_RAW_PATH = "D:/AI_Comic_Output/raw_comic.png"  # AI生成的四格漫画原图路径
+# ===================== 配置项（适配多图片） =====================
+# AI生成漫画的目录（你的D盘目录）
+AI_COMIC_DIR = "D:/AI_Comic_Output"
+# 匹配AI生成的图片（raw_comic1.png、raw_comic2.png...）
+AI_COMIC_PATTERN = "raw_comic*.png"
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 IMG_DIR = os.path.join(PROJECT_ROOT, "img")
 COMIC_HTML_DIR = os.path.join(PROJECT_ROOT, "comics")
 COMIC_INDEX_JSON = os.path.join(PROJECT_ROOT, "comic-index.json")
 GIT_BRANCH = "main"
 IMAGE_QUALITY = 85
+# 初中漫画默认配置
+DEFAULT_JUNIOR_THEME = "初中·校园生活·搞笑误会"
+DEFAULT_JUNIOR_TITLE_PREFIX = "初中校园笑话-"
 
 # ===================== 核心函数 =====================
 def get_next_comic_id():
@@ -34,21 +41,42 @@ def get_next_comic_id():
     return next_id
 
 def compress_image(input_path, output_path):
-    """压缩图片（适配四格漫画）"""
+    """压缩图片（适配多图片）"""
     try:
         img = Image.open(input_path)
         if img.mode in ("RGBA", "P"):
             img = img.convert("RGB")
         img.save(output_path, "JPEG", optimize=True, quality=IMAGE_QUALITY)
-        print(f"四格漫画图片压缩完成：{output_path}")
+        print(f"图片压缩完成：{output_path}")
     except Exception as e:
         shutil.copy(input_path, output_path)
         print(f"图片压缩失败，直接复制：{e}")
 
-def generate_comic_html(comic_id, comic_title, comic_topic, img_path):
-    """生成四格漫画详情页（适配笑点制造机风格）"""
+def read_meta_from_json(meta_file_path, comic_id_num):  # 新增参数comic_id_num
+    """从JSON读取标题/主题，默认适配初中类别"""
+    # 若没有元数据文件，直接返回默认值
+    if not os.path.exists(meta_file_path):
+        return f"{DEFAULT_JUNIOR_TITLE_PREFIX}{comic_id_num}", DEFAULT_JUNIOR_THEME
+    
+    try:
+        with open(meta_file_path, "r", encoding="utf-8") as f:
+            meta_data = json.load(f)
+        comic_title = meta_data.get("title", f"{DEFAULT_JUNIOR_TITLE_PREFIX}{comic_id_num}")
+        comic_topic = meta_data.get("topic", DEFAULT_JUNIOR_THEME)
+        return comic_title, comic_topic
+    except Exception as e:
+        print(f"读取JSON失败，使用初中类别默认值：{e}")
+        return f"{DEFAULT_JUNIOR_TITLE_PREFIX}{comic_id_num}", DEFAULT_JUNIOR_THEME
+
+def generate_comic_html(comic_id, comic_title, comic_topic, img_relative_paths):
+    """生成多图片漫画详情页（适配笑点制造机风格）"""
     html_path = os.path.join(COMIC_HTML_DIR, f"{comic_id}.html")
-    # 详情页模板（与首页视觉统一）
+    # 循环生成所有图片的HTML代码
+    img_html = ""
+    for img_path in img_relative_paths:
+        img_html += f'<img src="../{img_path}" alt="{comic_title}" class="comic-img">'
+    
+    # 详情页模板（多图片适配）
     html_template = f"""
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -92,6 +120,7 @@ def generate_comic_html(comic_id, comic_title, comic_topic, img_path):
             width: 100%; 
             border-radius: 8px; 
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
         }}
         .footer {{
             text-align: center;
@@ -106,7 +135,7 @@ def generate_comic_html(comic_id, comic_title, comic_topic, img_path):
         <a href="../index.html" class="back-btn">← 返回笑点制造机</a>
         <h1>{comic_title}</h1>
         <div class="topic">主题：{comic_topic}</div>
-        <img src="../{img_path}" alt="{comic_title}" class="comic-img">
+        {img_html}
         <div class="footer">© 笑点制造机 · AI辅助创作 · 仅供娱乐</div>
     </div>
 </body>
@@ -114,19 +143,19 @@ def generate_comic_html(comic_id, comic_title, comic_topic, img_path):
     """
     with open(html_path, "w", encoding="utf-8") as f:
         f.write(html_template.strip())
-    print(f"漫画详情页生成完成：{html_path}")
+    print(f"多图片漫画详情页生成完成：{html_path}")
     return html_path
 
-def update_comic_index(comic_id, comic_title, comic_topic, img_path, html_path):
-    """更新漫画索引JSON（新增主题字段）"""
+def update_comic_index(comic_id, comic_title, comic_topic, main_img_path, html_path):
+    """更新漫画索引JSON（主图展示在列表）"""
     with open(COMIC_INDEX_JSON, "r", encoding="utf-8") as f:
         data = json.load(f)
     
     new_comic = {
         "id": comic_id,
         "title": comic_title,
-        "topic": comic_topic,  # 新增主题字段
-        "img": img_path,
+        "topic": comic_topic,
+        "img": main_img_path,  # 列表页展示第一张图
         "html": html_path,
         "create_time": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     }
@@ -141,45 +170,65 @@ def git_push():
     try:
         os.chdir(PROJECT_ROOT)
         subprocess.run(["git", "add", "."], check=True)
-        subprocess.run(["git", "commit", "-m", f"Auto add comic: {time.strftime('%Y%m%d_%H%M%S')}"], check=True)
+        subprocess.run(["git", "commit", "-m", f"Auto add multi-img comic: {time.strftime('%Y%m%d_%H%M%S')}"], check=True)
         subprocess.run(["git", "push", "origin", GIT_BRANCH], check=True)
         print("Git推送成功，Cloudflare将自动部署！")
     except subprocess.CalledProcessError as e:
         print(f"Git推送失败：{e}")
 
 def main():
-    """主流程（适配笑点制造机）"""
-    # 创建必要目录
+    """主流程（适配多图片漫画）"""
+    # 1. 创建必要目录
     for dir_path in [IMG_DIR, COMIC_HTML_DIR]:
         if not os.path.exists(dir_path):
             os.makedirs(dir_path)
             print(f"创建目录：{dir_path}")
     
-    # 获取漫画ID
+    # 2. 获取漫画ID
     comic_id_num = get_next_comic_id()
     comic_id = f"comic-{comic_id_num}"
     
-    # 自定义标题和主题（可手动输入，也可从AI生成结果读取）
-    comic_title = input(f"请输入漫画标题（如：程序员的测试）：") or f"笑点漫画-{comic_id_num}"
-    comic_topic = input(f"请输入漫画主题（如：程序员·反转型笑话）：") or f"AI创作·四格漫画"
+    # 3. 读取标题和主题（优先读元数据，无则用默认）
+    AI_META_JSON_PATH = os.path.join(AI_COMIC_DIR, "comic_meta.json")
+    comic_title, comic_topic = read_meta_from_json(AI_META_JSON_PATH,comic_id_num)
+    print(f"漫画标题：{comic_title}")
+    print(f"漫画主题：{comic_topic}")
     
-    # 处理四格漫画图片
-    img_filename = f"{comic_id}-4grid.png"  # 四格漫画专属命名
-    img_output_path = os.path.join(IMG_DIR, img_filename)
-    compress_image(AI_COMIC_RAW_PATH, img_output_path)  # 压缩图片
-    # 若禁用压缩，替换为：shutil.copy(AI_COMIC_RAW_PATH, img_output_path)
+    # 4. 扫描AI生成的所有图片（raw_comic1.png、raw_comic2.png...）
+    ai_comic_files = glob.glob(os.path.join(AI_COMIC_DIR, AI_COMIC_PATTERN))
+    # 按文件名排序（确保1、2、3的顺序）
+    ai_comic_files.sort()
+    if not ai_comic_files:
+        print("⚠️ 未找到AI生成的漫画图片！")
+        return
     
-    # 生成详情页
-    img_relative_path = f"img/{img_filename}"
+    # 5. 批量处理图片（复制/压缩）
+    img_relative_paths = []  # 存储所有图片的相对路径
+    for idx, img_file in enumerate(ai_comic_files, 1):
+        # 命名规则：comic-001-1.png、comic-001-2.png...
+        img_filename = f"{comic_id}-{idx}.png"
+        img_output_path = os.path.join(IMG_DIR, img_filename)
+        # 压缩图片（注释此行则禁用压缩）
+        compress_image(img_file, img_output_path)
+        # 若禁用压缩，替换为：shutil.copy(img_file, img_output_path)
+        # 保存相对路径（用于详情页）
+        img_relative_paths.append(f"img/{img_filename}")
+    
+    # 6. 生成多图片详情页
     html_relative_path = f"comics/{comic_id}.html"
-    generate_comic_html(comic_id, comic_title, comic_topic, img_relative_path)
+    generate_comic_html(comic_id, comic_title, comic_topic, img_relative_paths)
     
-    # 更新索引JSON
-    update_comic_index(comic_id, comic_title, comic_topic, img_relative_path, html_relative_path)
+    # 7. 更新JSON索引（列表页展示第一张图）
+    update_comic_index(comic_id, comic_title, comic_topic, img_relative_paths[0], html_relative_path)
     
-    # 推送GitHub
+    # 8. 推送到GitHub
     git_push()
+    
+    # 可选：清空AI输出目录（避免重复处理）
+    # for img_file in ai_comic_files:
+    #     os.remove(img_file)
+    # print("已清空AI输出目录，避免重复处理")
 
 if __name__ == "__main__":
     main()
-    print("===== 笑点制造机漫画生成&同步流程完成 =====")
+    print("===== 多图片漫画生成&同步流程完成 =====")
