@@ -32,6 +32,17 @@
       "img": "img/comic-004-1.png",
       "html": "comics/comic-004.html",
       "create_time": "2026-01-11 10:08:37"
+    },
+    {
+      "id": "comic-005",
+      "title": "偷懒的洗碗方式",
+      "topic": "居家·亲子·搞笑偷懒",
+      "category": "生活日常",
+      "sub_topic": "亲子搞笑互动",
+      "funny_example": "妈妈让孩子洗碗，孩子用洗碗机 “偷懒”，最后妈妈哭笑不得",
+      "img": "img/comic-005-1.png",
+      "html": "comics/comic-005.html",
+      "create_time": "2026-01-11 10:23:48"
     }
   ]
 }

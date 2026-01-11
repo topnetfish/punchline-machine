@@ -11,7 +11,6 @@
             color: #333;
             background: #f5f5f5;
         }
-        /* 头部样式 */
         .header {
             text-align: center;
             padding: 60px 20px 20px;
@@ -27,7 +26,6 @@
             color: #666;
             margin-bottom: 20px;
         }
-        /* 新增：分类筛选栏 */
         .category-filter {
             max-width: 1200px;
             margin: 0 auto;
@@ -55,7 +53,6 @@
         .filter-btn:hover:not(.active) {
             background: #eee;
         }
-        /* 漫画列表 */
         .comic-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -64,7 +61,6 @@
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 30px;
         }
-        /* 漫画卡片 */
         .comic-card {
             background: white;
             border-radius: 12px;
@@ -73,12 +69,29 @@
             transition: transform 0.2s ease;
             text-decoration: none;
             color: inherit;
+            position: relative;
         }
         .comic-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
-        /* 漫画预览图容器 */
+        /* 新增：笑点示例hover提示 */
+        .comic-card .funny-tip {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            max-width: 200px;
+            display: none;
+            z-index: 10;
+        }
+        .comic-card:hover .funny-tip {
+            display: block;
+        }
         .comic-preview {
             height: 220px;
             background: #eee;
@@ -96,45 +109,59 @@
             position: absolute;
             top: 0;
             left: 0;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
-        /* 卡片底部信息 */
+        .comic-preview img.loaded {
+            opacity: 1;
+        }
         .comic-info {
             padding: 20px;
+        }
+        .comic-category {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
         }
         .comic-title {
             font-size: 20px;
             font-weight: 600;
             margin-bottom: 8px;
         }
-        .comic-topic {
+        .comic-sub-topic {
             color: #666;
             font-size: 14px;
+            margin-bottom: 4px;
         }
-        /* 页脚 */
+        .comic-topic {
+            color: #999;
+            font-size: 13px;
+        }
         .footer {
             text-align: center;
             padding: 40px 20px;
             color: #999;
             font-size: 14px;
         }
-        /* 空数据样式 */
         .empty-tip {
             text-align: center;
             padding: 60px 20px;
             color: #999;
             font-size: 18px;
-            grid-column: 1 / -1; /* 占满整行 */
+            grid-column: 1 / -1;
         }
     </style>
 </head>
 <body>
-    <!-- 头部 -->
     <div class="header">
         <h1>笑点制造机</h1>
         <p>算法在打工，笑点在下班 · 每天一条四格漫画</p>
     </div>
 
-    <!-- 新增：分类筛选栏 -->
     <div class="category-filter">
         <button class="filter-btn active" data-category="all">全部</button>
         <button class="filter-btn" data-category="生活日常">生活日常</button>
@@ -144,100 +171,70 @@
         <button class="filter-btn" data-category="节日季节">节日季节</button>
     </div>
 
-    <!-- 漫画列表 -->
     <div class="comic-container" id="comicList">
-        <!-- 加载中提示 -->
         <div class="empty-tip">加载中...</div>
     </div>
 
-    <!-- 页脚 -->
     <div class="footer">
         © 笑点制造机 · AI辅助创作 · 仅供娱乐
     </div>
 
     <script>
-        // 全局变量：存储所有漫画数据
         let allComics = [];
-        // 五大分类（和脚本保持一致）
         const CATEGORIES = ["all", "生活日常", "职场打工", "校园", "趣味脑洞", "节日季节"];
 
-        // 加载漫画列表（适配分类筛选）
         async function loadComicList() {
-            const comicListEl = document.getElementById("comicList");
+            const el = document.getElementById("comicList");
             try {
                 const res = await fetch("comic-index.json");
                 const data = await res.json();
-                allComics = data.comics || [];
-
-                // 无漫画时显示提示
-                if (allComics.length === 0) {
-                    comicListEl.innerHTML = '<div class="empty-tip">暂无四格漫画，快来创作第一条吧～</div>';
-                    return;
-                }
-
-                // 倒序展示（最新的在前面）
-                allComics.reverse();
-                // 初始展示全部
+                allComics = (data.comics || []).reverse();
                 renderComics("all");
             } catch (e) {
-                console.error("加载漫画列表失败：", e);
-                comicListEl.innerHTML = '<div class="empty-tip">加载失败，请刷新页面重试</div>';
+                el.innerHTML = '<div class="empty-tip">加载失败，请刷新重试</div>';
+                console.error(e);
             }
         }
 
-        // 渲染指定分类的漫画
         function renderComics(category) {
-            const comicListEl = document.getElementById("comicList");
-            // 筛选漫画：all则显示全部，否则筛选对应分类
-            const filteredComics = category === "all" 
-                ? allComics 
-                : allComics.filter(comic => comic.category === category);
+            const el = document.getElementById("comicList");
+            const filtered = category === "all" ? allComics : allComics.filter(c => c.category === category);
 
-            // 无对应分类漫画时显示提示
-            if (filteredComics.length === 0) {
-                comicListEl.innerHTML = `<div class="empty-tip">暂无「${category}」类漫画～</div>`;
+            if (filtered.length === 0) {
+                el.innerHTML = `<div class="empty-tip">暂无「${category}」类漫画～</div>`;
                 return;
             }
 
-            // 生成漫画卡片HTML
-            let html = "";
-            filteredComics.forEach(comic => {
-                html += `
-                    <a href="${comic.html}" class="comic-card">
-                        <div class="comic-preview">
-                            <img src="${comic.img}" alt="${comic.title}" onload="this.style.opacity=1" style="opacity:0;transition:opacity 0.3s;">
-                            <span style="opacity:0;">四格漫画预览</span>
-                        </div>
-                        <div class="comic-info">
-                            <div class="comic-title">${comic.title}</div>
-                            <div class="comic-topic">主题：${comic.topic}</div>
-                        </div>
-                    </a>
-                `;
-            });
-            comicListEl.innerHTML = html;
+            el.innerHTML = filtered.map(comic => `
+                <a href="${comic.html}" class="comic-card">
+                    <div class="funny-tip">核心笑点：${comic.funny_example}</div>
+                    <div class="comic-preview">
+                        <img src="${comic.img}" alt="${comic.title}" onload="this.classList.add('loaded')">
+                        <span>四格漫画预览</span>
+                    </div>
+                    <div class="comic-info">
+                        <span class="comic-category">${comic.category}</span>
+                        <div class="comic-title">${comic.title}</div>
+                        <div class="comic-sub-topic">子主题：${comic.sub_topic}</div>
+                        <div class="comic-topic">主题标签：${comic.topic}</div>
+                    </div>
+                </a>
+            `).join("");
         }
 
-        // 绑定分类筛选按钮事件
-        function bindFilterEvents() {
-            const filterBtns = document.querySelectorAll(".filter-btn");
-            filterBtns.forEach(btn => {
+        function bindFilter() {
+            document.querySelectorAll(".filter-btn").forEach(btn => {
                 btn.addEventListener("click", () => {
-                    // 移除所有active样式
-                    filterBtns.forEach(b => b.classList.remove("active"));
-                    // 给当前按钮加active
+                    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
                     btn.classList.add("active");
-                    // 渲染对应分类
-                    const category = btn.dataset.category;
-                    renderComics(category);
+                    renderComics(btn.dataset.category);
                 });
             });
         }
 
-        // 页面加载时执行
         window.onload = () => {
             loadComicList();
-            bindFilterEvents();
+            bindFilter();
         };
     </script>
 </body>
