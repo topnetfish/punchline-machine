@@ -71,7 +71,7 @@ def get_comic_meta(comic_id_num, meta_file_path=None):
 
             category = meta_data.get("category", DEFAULT_CATEGORY)
             sub_category = meta_data.get("sub_category", DEFAULT_SUB_CATEGORY)
-
+            print(f"- test----主分类：{category}\n- 子主题：{sub_category}\n")
             # 尝试从模板补全缺失字段
             template = get_template(category, sub_category)
             if template:
