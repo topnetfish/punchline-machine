@@ -159,136 +159,153 @@ def get_comic_meta(comic_id_num, meta_file_path=None):
 
 
 def generate_comic_html(comic_id, title, topic, category, sub_topic, funny_example, img_paths):
-    """生成详情页（支持GIF动图）"""
+    """生成详情页（支持GIF + 访问统计 + 广告位预留）"""
     html_path = os.path.join(COMIC_HTML_DIR, f"{comic_id}.html")
 
-    # 生成图片HTML，根据文件类型添加相应属性
+    # 生成图片HTML（第一张图后插入中部广告）
     img_html_list = []
-    for img_path in img_paths:
-        # 获取文件扩展名
+    for idx, img_path in enumerate(img_paths):
         img_ext = os.path.splitext(img_path)[1].lower()
 
         if img_ext == '.gif':
-            # GIF动图，添加循环播放属性
-            img_html = f'<img src="../{img_path}" alt="{title}" class="comic-img gif-image" loading="lazy" loop autoplay muted playsinline>'
+            img_html = f'<img src="../{img_path}" alt="{title}" class="comic-img gif-image" loading="lazy">'
         else:
-            # 静态图片
             img_html = f'<img src="../{img_path}" alt="{title}" class="comic-img" loading="lazy">'
 
         img_html_list.append(img_html)
 
+        # 第一张图后插入广告位（CTR最高）
+        if idx == 0:
+            img_html_list.append("""
+            <div class="ad-slot ad-middle">
+                <span class="ad-placeholder">广告位（300×250）</span>
+            </div>
+            """)
+
     img_html = "".join(img_html_list)
 
     html_template = f"""
-    <!DOCTYPE html>
-    <html lang="zh-CN">
-    <head>
-        <meta charset="UTF-8">
-        <title>{title} - 笑点制造机</title>
-        <style>
-            * {{ margin: 0; padding: 0; box-sizing: border-box; }}
-            body {{ 
-                font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
-                background: #f5f5f5; 
-                color: #333;
-            }}
-            .container {{ 
-                max-width: 800px; 
-                margin: 0 auto; 
-                padding: 40px 20px; 
-            }}
-            .back-btn {{ 
-                display: inline-block; 
-                padding: 8px 16px; 
-                background: #333; 
-                color: white; 
-                text-decoration: none; 
-                border-radius: 4px; 
-                margin-bottom: 30px;
-                font-size: 14px;
-            }}
-            .back-btn:hover {{ background: #555; }}
-            h1 {{ 
-                font-size: 28px; 
-                margin-bottom: 10px; 
-                font-weight: 600;
-            }}
-            .meta-info {{
-                color: #666;
-                font-size: 16px;
-                margin-bottom: 30px;
-                line-height: 1.8;
-                background: white;
-                padding: 20px;
-                border-radius: 8px;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            }}
-            .meta-info .label {{
-                color: #333;
-                font-weight: 500;
-                display: inline-block;
-                width: 80px;
-            }}
-            .comic-img {{ 
-                width: 100%; 
-                border-radius: 8px; 
-                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-                margin-bottom: 20px;
-                max-width: 100%;
-                height: auto;
-            }}
-            .gif-indicator {{
-                position: absolute;
-                top: 10px;
-                right: 10px;
-                background: rgba(0,0,0,0.7);
-                color: white;
-                padding: 2px 8px;
-                border-radius: 4px;
-                font-size: 12px;
-            }}
-            .image-container {{
-                position: relative;
-                display: inline-block;
-                width: 100%;
-            }}
-            .footer {{
-                text-align: center;
-                margin-top: 40px;
-                color: #999;
-                font-size: 14px;
-            }}
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <a href="../index.html" class="back-btn">← 返回笑点制造机</a>
-            <h1>{title}</h1>
-            <div class="meta-info">
-                <div><span class="label">主分类：</span>{category}</div>
-                <div><span class="label">子主题：</span>{sub_topic}</div>
-                <div><span class="label">核心笑点：</span>{funny_example}</div>
-                <div><span class="label">主题标签：</span>{topic}</div>
-            </div>
-            {img_html}
-            <div class="footer">© 笑点制造机 · AI辅助创作 · 仅供娱乐</div>
-        </div>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>{title} - 笑点制造机</title>
 
-        <script>
-            // 自动播放GIF动图
-            document.addEventListener('DOMContentLoaded', function() {{
-                const gifImages = document.querySelectorAll('.gif-image');
-                gifImages.forEach(img => {{
-                    // 确保GIF动图自动播放
-                    img.play();
-                }});
-            }});
-        </script>
-    </body>
-    </html>
+    <!-- 访问统计（不蒜子） -->
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <style>
+        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+        body {{
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }}
+        .container {{
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }}
+        .back-btn {{
+            display: inline-block;
+            padding: 8px 16px;
+            background: #333;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }}
+        h1 {{
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }}
+        .meta-info {{
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            line-height: 1.8;
+            font-size: 16px;
+        }}
+        .meta-info .label {{
+            font-weight: 500;
+            display: inline-block;
+            width: 90px;
+        }}
+        .comic-img {{
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }}
+
+        /* 广告位样式 */
+        .ad-slot {{
+            width: 100%;
+            margin: 30px 0;
+            padding: 16px;
+            background: #fafafa;
+            border: 1px dashed #ddd;
+            border-radius: 8px;
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+        }}
+        .ad-top {{ min-height: 90px; }}
+        .ad-middle {{ min-height: 250px; }}
+        .ad-footer {{ min-height: 90px; }}
+
+        .footer {{
+            text-align: center;
+            margin-top: 40px;
+            color: #999;
+            font-size: 14px;
+        }}
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="../index.html" class="back-btn">← 返回笑点制造机</a>
+
+    <h1>{title}</h1>
+
+    <!-- 顶部广告位 -->
+    <div class="ad-slot ad-top">
+        <span class="ad-placeholder">广告位（728×90）</span>
+    </div>
+
+    <div class="meta-info">
+        <div><span class="label">主分类：</span>{category}</div>
+        <div><span class="label">子主题：</span>{sub_topic}</div>
+        <div><span class="label">核心笑点：</span>{funny_example}</div>
+        <div><span class="label">主题标签：</span>{topic}</div>
+        <div>
+            <span class="label">阅读次数：</span>
+            <span id="busuanzi_value_page_pv">加载中...</span>
+        </div>
+    </div>
+
+    {img_html}
+
+    <!-- 底部广告位 -->
+    <div class="ad-slot ad-footer">
+        <span class="ad-placeholder">广告位（728×90）</span>
+    </div>
+
+    <div class="footer">
+        © 笑点制造机 · AI辅助创作 · 仅供娱乐
+    </div>
+</div>
+</body>
+</html>
     """
+
     with open(html_path, "w", encoding="utf-8") as f:
         f.write(html_template.strip())
+
     print(f"详情页生成完成：{html_path}")
     return html_path
 
