@@ -181,6 +181,19 @@
       "img_count": 1,
       "has_gif": true,
       "create_time": "2026-01-12 10:41:16"
+    },
+    {
+      "id": "comic-018",
+      "title": "厨房翻车",
+      "topic": "做料理视频，锅糊掉了还强行拍，烟雾弥漫，镜头里全是黑色，家人调侃：这是黑暗料理",
+      "category": "生活日常",
+      "sub_topic": "居家日常",
+      "funny_example": "简单有趣的日常小笑点",
+      "img": "img/comic-018-1.gif",
+      "html": "comics/comic-018.html",
+      "img_count": 1,
+      "has_gif": true,
+      "create_time": "2026-01-12 10:57:56"
     }
   ]
 }

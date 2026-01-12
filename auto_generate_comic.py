@@ -302,7 +302,7 @@ def generate_comic_html(comic_id, title, topic, category, sub_topic, funny_examp
 </body>
 </html>
 <script>
-fetch('https://你的-worker域名.workers.dev/hit?id={comic_id}');
+fetch('https://punchline-machine.workers.dev/hit?id={comic_id}');
 </script>
     """
 
