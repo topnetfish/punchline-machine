@@ -4,8 +4,7 @@
 <meta charset="UTF-8">
 <title>笑点制造机 · AI 趣味笑话漫画</title>
 
-<!-- 访问统计（不蒜子） -->
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- 访问统计 -->
 
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -119,14 +118,23 @@ header .stats {
 <div class="container">
 
 <header>
-    <h1>😂 笑点制造机</h1>
+    <h1>😂 笑点制造机 😂</h1>
     <div class="stats">
         全站访问量：
-        <span id="busuanzi_value_site_pv">--</span>
+        <span id="site-pv">--</span>
         · 访客数：
-        <span id="busuanzi_value_site_uv">--</span>
+        <span id="site-uv">--</span>
     </div>
-    <a href="rank.html">🔥 热门排行榜</a>
+
+    <a href="rank.html" style="
+    display:inline-block;
+    margin-top:8px;
+    font-size:15px;
+    color:#ff6b6b;
+    text-decoration:none;
+    ">
+    🔥 热门排行榜
+    </a>
 
 </header>
 
@@ -182,6 +190,18 @@ fetch('comic-index.json')
             list.appendChild(card);
         });
     });
+
+fetch('https://punchline-machine.pages.dev/stat')
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById('site-pv').innerText = data.pv;
+    document.getElementById('site-uv').innerText = data.uv;
+  })
+  .catch(() => {
+    document.getElementById('site-pv').innerText = '--';
+    document.getElementById('site-uv').innerText = '--';
+  });
+
 </script>
 
 </body>
