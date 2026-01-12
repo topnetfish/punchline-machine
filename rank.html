@@ -1,0 +1,56 @@
+<script>
+const WORKER_API = 'https://comic-hot-counter.workers.dev';
+
+let indexMap = {};
+let hotList = [];
+
+Promise.all([
+    fetch('comic-index.json').then(r => r.json()),
+    fetch(WORKER_API + '/top').then(r => r.json())
+]).then(([indexData, hotData]) => {
+    indexData.comics.forEach(c => {
+        if (!c.category) c.category = '未分类';
+        indexMap[c.id] = c;
+    });
+    hotList = hotData;
+    renderRank('all');
+});
+
+function renderRank(category) {
+    const container = document.getElementById('rank-list');
+    container.innerHTML = '';
+
+    const filtered = hotList.filter(item => {
+        const comic = indexMap[item.id];
+        if (!comic) return false;
+        if (category === 'all') return true;
+        return comic.category === category;
+    });
+
+    filtered.forEach((item, i) => {
+        const comic = indexMap[item.id];
+        if (!comic) return;
+
+        const a = document.createElement('a');
+        a.href = comic.html;
+        a.className = 'rank-item';
+
+        const rankClass = i < 3 ? `rank-${i+1}` : '';
+
+        a.innerHTML = `
+            <div class="rank-num ${rankClass}">#${i + 1}</div>
+            <img src="${comic.img}">
+            <div class="rank-content">
+                <div class="rank-title">${comic.title}</div>
+                <div class="rank-meta">
+                    <span class="tag">${comic.category}</span>
+                    ${comic.sub_topic ? `<span class="tag">${comic.sub_topic}</span>` : ''}
+                    ${comic.has_gif ? '<span class="tag gif-tag">GIF</span>' : ''}
+                    <div>🔥 ${item.pv} 阅读</div>
+                </div>
+            </div>
+        `;
+        container.appendChild(a);
+    });
+}
+</script>
