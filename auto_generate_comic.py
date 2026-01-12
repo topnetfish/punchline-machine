@@ -301,6 +301,9 @@ def generate_comic_html(comic_id, title, topic, category, sub_topic, funny_examp
 </div>
 </body>
 </html>
+<script>
+fetch('https://你的-worker域名.workers.dev/hit?id={comic_id}');
+</script>
     """
 
     with open(html_path, "w", encoding="utf-8") as f:

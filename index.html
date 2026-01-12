@@ -1,241 +1,186 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>笑点制造机</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
-            color: #333;
-            background: #f5f5f5;
-        }
-        .header {
-            text-align: center;
-            padding: 60px 20px 20px;
-            background: white;
-        }
-        .header h1 {
-            font-size: 40px;
-            font-weight: 700;
-            margin-bottom: 16px;
-        }
-        .header p {
-            font-size: 18px;
-            color: #666;
-            margin-bottom: 20px;
-        }
-        .category-filter {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            background: white;
-            border-bottom: 1px solid #eee;
-        }
-        .filter-btn {
-            padding: 8px 20px;
-            background: #f5f5f5;
-            border: none;
-            border-radius: 20px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .filter-btn.active {
-            background: #333;
-            color: white;
-        }
-        .filter-btn:hover:not(.active) {
-            background: #eee;
-        }
-        .comic-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 30px;
-        }
-        .comic-card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            overflow: hidden;
-            transition: transform 0.2s ease;
-            text-decoration: none;
-            color: inherit;
-            position: relative;
-        }
-        .comic-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        /* 新增：笑点示例hover提示 */
-        .comic-card .funny-tip {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(0,0,0,0.7);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 12px;
-            max-width: 200px;
-            display: none;
-            z-index: 10;
-        }
-        .comic-card:hover .funny-tip {
-            display: block;
-        }
-        .comic-preview {
-            height: 220px;
-            background: #eee;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #999;
-            font-size: 16px;
-            position: relative;
-        }
-        .comic-preview img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            position: absolute;
-            top: 0;
-            left: 0;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .comic-preview img.loaded {
-            opacity: 1;
-        }
-        .comic-info {
-            padding: 20px;
-        }
-        .comic-category {
-            display: inline-block;
-            padding: 4px 8px;
-            background: #f0f0f0;
-            border-radius: 4px;
-            font-size: 12px;
-            color: #666;
-            margin-bottom: 8px;
-        }
-        .comic-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-        .comic-sub-topic {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 4px;
-        }
-        .comic-topic {
-            color: #999;
-            font-size: 13px;
-        }
-        .footer {
-            text-align: center;
-            padding: 40px 20px;
-            color: #999;
-            font-size: 14px;
-        }
-        .empty-tip {
-            text-align: center;
-            padding: 60px 20px;
-            color: #999;
-            font-size: 18px;
-            grid-column: 1 / -1;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>笑点制造机 · AI 趣味漫画</title>
+
+<!-- 访问统计（不蒜子） -->
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #f5f5f5;
+    color: #333;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 30px 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+header h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+header .stats {
+    color: #666;
+    font-size: 14px;
+}
+
+.ad-slot {
+    width: 100%;
+    margin: 30px 0;
+    padding: 16px;
+    background: #fafafa;
+    border: 1px dashed #ddd;
+    border-radius: 8px;
+    text-align: center;
+    color: #999;
+    font-size: 14px;
+}
+
+.ad-top { min-height: 90px; }
+.ad-feed { min-height: 250px; }
+.ad-footer { min-height: 90px; }
+
+.comic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.comic-card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: transform .2s;
+}
+
+.comic-card:hover {
+    transform: translateY(-4px);
+}
+
+.comic-card img {
+    width: 100%;
+    display: block;
+}
+
+.comic-content {
+    padding: 14px;
+}
+
+.comic-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.comic-meta {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.6;
+}
+
+.tag {
+    display: inline-block;
+    background: #eee;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-right: 6px;
+    font-size: 12px;
+}
+
+.gif-tag {
+    background: #ff6b6b;
+    color: white;
+}
+
+.footer {
+    text-align: center;
+    margin: 40px 0 10px;
+    color: #999;
+    font-size: 14px;
+}
+</style>
 </head>
+
 <body>
-    <div class="header">
-        <h1>笑点制造机</h1>
-        <p>算法在打工，笑点在下班 · 每天一条四格漫画</p>
+<div class="container">
+
+<header>
+    <h1>😂 笑点制造机</h1>
+    <div class="stats">
+        全站访问量：
+        <span id="busuanzi_value_site_pv">--</span>
+        · 访客数：
+        <span id="busuanzi_value_site_uv">--</span>
     </div>
+</header>
 
-    <div class="category-filter">
-        <button class="filter-btn active" data-category="all">全部</button>
-        <button class="filter-btn" data-category="生活日常">生活日常</button>
-        <button class="filter-btn" data-category="职场打工">职场打工</button>
-        <button class="filter-btn" data-category="校园">校园</button>
-        <button class="filter-btn" data-category="趣味脑洞">趣味脑洞</button>
-        <button class="filter-btn" data-category="节日季节">节日季节</button>
-    </div>
+<!-- 顶部广告 -->
+<div class="ad-slot ad-top">
+    广告位（728×90）
+</div>
 
-    <div class="comic-container" id="comicList">
-        <div class="empty-tip">加载中...</div>
-    </div>
+<div id="comic-list" class="comic-grid"></div>
 
-    <div class="footer">
-        © 笑点制造机 · AI辅助创作 · 仅供娱乐
-    </div>
+<!-- 信息流广告 -->
+<div class="ad-slot ad-feed">
+    广告位（300×250）
+</div>
 
-    <script>
-        let allComics = [];
-        const CATEGORIES = ["all", "生活日常", "职场打工", "校园", "趣味脑洞", "节日季节"];
+<!-- 底部广告 -->
+<div class="ad-slot ad-footer">
+    广告位（728×90）
+</div>
 
-        async function loadComicList() {
-            const el = document.getElementById("comicList");
-            try {
-                const res = await fetch("comic-index.json");
-                const data = await res.json();
-                allComics = (data.comics || []).reverse();
-                renderComics("all");
-            } catch (e) {
-                el.innerHTML = '<div class="empty-tip">加载失败，请刷新重试</div>';
-                console.error(e);
-            }
-        }
+<div class="footer">
+    © 笑点制造机 · AI 辅助创作 · 仅供娱乐
+</div>
 
-        function renderComics(category) {
-            const el = document.getElementById("comicList");
-            const filtered = category === "all" ? allComics : allComics.filter(c => c.category === category);
+</div>
 
-            if (filtered.length === 0) {
-                el.innerHTML = `<div class="empty-tip">暂无「${category}」类漫画～</div>`;
-                return;
-            }
+<script>
+fetch('comic-index.json')
+    .then(res => res.json())
+    .then(data => {
+        const list = document.getElementById('comic-list');
+        const comics = data.comics.slice().reverse();
 
-            el.innerHTML = filtered.map(comic => `
-                <a href="${comic.html}" class="comic-card">
-                    <div class="funny-tip">核心笑点：${comic.funny_example}</div>
-                    <div class="comic-preview">
-                        <img src="${comic.img}" alt="${comic.title}" onload="this.classList.add('loaded')">
-                        <span>四格漫画预览</span>
+        comics.forEach(comic => {
+            const card = document.createElement('a');
+            card.href = comic.html;
+            card.className = 'comic-card';
+            card.style.textDecoration = 'none';
+            card.style.color = 'inherit';
+
+            card.innerHTML = `
+                <img src="${comic.img}" loading="lazy">
+                <div class="comic-content">
+                    <div class="comic-title">${comic.title}</div>
+                    <div class="comic-meta">
+                        <span class="tag">${comic.category}</span>
+                        <span class="tag">${comic.sub_topic}</span>
+                        ${comic.has_gif ? '<span class="tag gif-tag">GIF</span>' : ''}
+                        <div>📸 ${comic.img_count} 张</div>
                     </div>
-                    <div class="comic-info">
-                        <span class="comic-category">${comic.category}</span>
-                        <div class="comic-title">${comic.title}</div>
-                        <div class="comic-sub-topic">子主题：${comic.sub_topic}</div>
-                        <div class="comic-topic">主题标签：${comic.topic}</div>
-                    </div>
-                </a>
-            `).join("");
-        }
+                </div>
+            `;
+            list.appendChild(card);
+        });
+    });
+</script>
 
-        function bindFilter() {
-            document.querySelectorAll(".filter-btn").forEach(btn => {
-                btn.addEventListener("click", () => {
-                    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-                    btn.classList.add("active");
-                    renderComics(btn.dataset.category);
-                });
-            });
-        }
-
-        window.onload = () => {
-            loadComicList();
-            bindFilter();
-        };
-    </script>
 </body>
 </html>
