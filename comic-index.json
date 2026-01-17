@@ -20,6 +20,19 @@
       "img_count": 1,
       "has_gif": true,
       "create_time": "2026-01-17 20:51:42"
+    },
+    {
+      "id": "comic-003",
+      "title": "电",
+      "topic": "夏天开空调盖被子，被妈妈吐槽 “浪费电”",
+      "category": "生活日常",
+      "sub_topic": "居家日常",
+      "funny_example": "简单有趣的日常小笑点",
+      "img": "img/comic-003-1.gif",
+      "html": "comics/comic-003.html",
+      "img_count": 1,
+      "has_gif": true,
+      "create_time": "2026-01-17 22:21:17"
     }
   ]
 }

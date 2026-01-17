@@ -191,8 +191,32 @@ def generate_comic_html(comic_id, title, topic, category, sub_topic, funny_examp
     <meta charset="UTF-8">
     <title>{title} - 笑点制造机</title>
 
-    <!-- 访问统计（不蒜子） -->
-    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <!-- Cloudflare Worker 统计脚本 -->
+    <script>
+        // 统计脚本 - 异步加载，不阻塞页面渲染
+        document.addEventListener('DOMContentLoaded', function() {{
+            // 1. 记录漫画阅读量
+            const comicId = '{comic_id}';
+            
+            // 使用图片方式记录阅读量（不会被广告拦截器拦截）
+            const hitImg = new Image();
+            hitImg.src = `https://comic-hot-counter.zhouguangzheng.workers.dev/hit?id=${{comicId}}`;
+            
+            // 2. 获取并显示该漫画的阅读量
+            fetch(`https://comic-hot-counter.zhouguangzheng.workers.dev/hit?id=${{comicId}}`)
+                .then(response => response.json())
+                .then(data => {{
+                    if (data.success) {{
+                        document.getElementById('comic-views-count').textContent = 
+                            data.data.views.toLocaleString();
+                    }}
+                }})
+                .catch(error => {{
+                    console.error('获取漫画阅读量失败:', error);
+                    document.getElementById('comic-views-count').textContent = '加载失败';
+                }});
+        }});
+    </script>
 
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
@@ -264,6 +288,22 @@ def generate_comic_html(comic_id, title, topic, category, sub_topic, funny_examp
             color: #999;
             font-size: 14px;
         }}
+        
+        /* 加载动画 */
+        .loading {{
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }}
+        
+        @keyframes spin {{
+            0% {{ transform: rotate(0deg); }}
+            100% {{ transform: rotate(360deg); }}
+        }}
     </style>
 </head>
 <body>
@@ -284,7 +324,9 @@ def generate_comic_html(comic_id, title, topic, category, sub_topic, funny_examp
         <div><span class="label">主题标签：</span>{topic}</div>
         <div>
             <span class="label">阅读次数：</span>
-            <span id="busuanzi_value_page_pv">加载中...</span>
+            <span id="comic-views-count">
+                <span class="loading"></span> 统计中...
+            </span>
         </div>
     </div>
 
@@ -299,15 +341,8 @@ def generate_comic_html(comic_id, title, topic, category, sub_topic, funny_examp
         © 笑点制造机 · AI辅助创作 · 仅供娱乐
     </div>
 </div>
-<img
-  src="https://comic-hot-counter.zhouguangzheng.workers.dev/hit?id={comic_id}"
-  width="1"
-  height="1"
-  style="display:none"
-/>
 </body>
 </html>
-
     """
 
     with open(html_path, "w", encoding="utf-8") as f:
@@ -315,7 +350,6 @@ def generate_comic_html(comic_id, title, topic, category, sub_topic, funny_examp
 
     print(f"详情页生成完成：{html_path}")
     return html_path
-
 
 def update_comic_index(comic_id, title, topic, category, sub_topic, funny_example, main_img, html_path, img_count):
     """更新索引（含完整模板字段和图片数量信息）"""
