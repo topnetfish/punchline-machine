@@ -299,11 +299,15 @@ def generate_comic_html(comic_id, title, topic, category, sub_topic, funny_examp
         © 笑点制造机 · AI辅助创作 · 仅供娱乐
     </div>
 </div>
+<img
+  src="https://comic-hot-counter.zhouguangzheng.workers.dev/hit?id={comic_id}"
+  width="1"
+  height="1"
+  style="display:none"
+/>
 </body>
 </html>
-<script>
-fetch('https://punchline-machine.workers.dev/hit?id={comic_id}');
-</script>
+
     """
 
     with open(html_path, "w", encoding="utf-8") as f:

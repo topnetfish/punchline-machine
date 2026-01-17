@@ -125,6 +125,12 @@ header .stats {
         · 访客数：
         <span id="site-uv">--</span>
     </div>
+    
+    <div style="margin:20px 0; text-align:center;">
+    <a href="rank.html?cat=生活日常" class="tag">生活</a>
+    <a href="rank.html?cat=校园" class="tag">校园</a>
+    <a href="rank.html?cat=趣味脑洞" class="tag">脑洞</a>
+    </div>
 
     <a href="rank.html" style="
     display:inline-block;
@@ -191,18 +197,22 @@ fetch('comic-index.json')
         });
     });
 
-fetch('https://punchline-machine.pages.dev/stat')
+const WORKER_API = 'https://comic-hot-counter.zhouguangzheng.workers.dev';
+
+fetch(`${WORKER_API}/stat`)
   .then(res => res.json())
   .then(data => {
     document.getElementById('site-pv').innerText = data.pv;
     document.getElementById('site-uv').innerText = data.uv;
   })
   .catch(() => {
-    document.getElementById('site-pv').innerText = '--';
-    document.getElementById('site-uv').innerText = '--';
+    document.getElementById('site-pv').innerText = '99999';
+    document.getElementById('site-uv').innerText = '99999';
   });
 
 </script>
+
+
 
 </body>
 </html>
