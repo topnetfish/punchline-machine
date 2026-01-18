@@ -46,6 +46,19 @@
       "img_count": 1,
       "has_gif": true,
       "create_time": "2026-01-18 15:38:41"
+    },
+    {
+      "id": "comic-005",
+      "title": "猫猫行为2",
+      "topic": "猫咪2偷喝主人的奶茶，被抓包后装无辜，最后打翻杯子",
+      "category": "生活日常",
+      "sub_topic": "居家日常",
+      "funny_example": "简单有趣的日常小笑点",
+      "img": "img/comic-005-1.gif",
+      "html": "comics/comic-005.html",
+      "img_count": 1,
+      "has_gif": true,
+      "create_time": "2026-01-18 20:45:56"
     }
   ]
 }

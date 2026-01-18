@@ -192,6 +192,8 @@ def generate_comic_html(comic_id, title, topic, category, sub_topic, funny_examp
     <link rel="preconnect" href="https://comic-hot-counter.zhouguangzheng.workers.dev">
     
     <script>
+
+
         // 优化统计脚本
         window.addEventListener('load', function() {{
             // 延迟执行统计，不阻塞页面渲染
