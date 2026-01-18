@@ -188,159 +188,41 @@ def generate_comic_html(comic_id, title, topic, category, sub_topic, funny_examp
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <title>{title} - 笑点制造机</title>
-
-    <!-- Cloudflare Worker 统计脚本 -->
+    <!-- 预连接统计服务 -->
+    <link rel="preconnect" href="https://comic-hot-counter.zhouguangzheng.workers.dev">
+    
     <script>
-        // 统计脚本 - 异步加载，不阻塞页面渲染
-        document.addEventListener('DOMContentLoaded', function() {{
-            // 1. 记录漫画阅读量
-            const comicId = '{comic_id}';
-            
-            // 使用图片方式记录阅读量（不会被广告拦截器拦截）
-            const hitImg = new Image();
-            hitImg.src = `https://comic-hot-counter.zhouguangzheng.workers.dev/hit?id=${{comicId}}`;
-            
-            // 2. 获取并显示该漫画的阅读量
-            fetch(`https://comic-hot-counter.zhouguangzheng.workers.dev/hit?id=${{comicId}}`)
-                .then(response => response.json())
-                .then(data => {{
-                    if (data.success) {{
-                        document.getElementById('comic-views-count').textContent = 
-                            data.data.views.toLocaleString();
-                    }}
-                }})
-                .catch(error => {{
-                    console.error('获取漫画阅读量失败:', error);
-                    document.getElementById('comic-views-count').textContent = '加载失败';
-                }});
+        // 优化统计脚本
+        window.addEventListener('load', function() {{
+            // 延迟执行统计，不阻塞页面渲染
+            setTimeout(function() {{
+                // 记录阅读量
+                const img = new Image();
+                img.src = `https://comic-hot-counter.zhouguangzheng.workers.dev/hit?id={comic_id}`;
+                
+                // 获取并显示阅读量
+                fetch(`https://comic-hot-counter.zhouguangzheng.workers.dev/hit?id={comic_id}`)
+                    .then(response => response.json())
+                    .then(data => {{
+                        if (data.success) {{
+                            document.getElementById('comic-views-count').textContent = 
+                                data.data.views.toLocaleString();
+                        }}
+                    }})
+                    .catch(() => {{
+                        // 静默失败
+                    }});
+            }}, 500); // 延迟500ms执行
         }});
     </script>
-
-    <style>
-        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
-        body {{
-            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
-            background: #f5f5f5;
-            color: #333;
-        }}
-        .container {{
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }}
-        .back-btn {{
-            display: inline-block;
-            padding: 8px 16px;
-            background: #333;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            margin-bottom: 30px;
-            font-size: 14px;
-        }}
-        h1 {{
-            font-size: 28px;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }}
-        .meta-info {{
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            line-height: 1.8;
-            font-size: 16px;
-        }}
-        .meta-info .label {{
-            font-weight: 500;
-            display: inline-block;
-            width: 90px;
-        }}
-        .comic-img {{
-            width: 100%;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }}
-
-        /* 广告位样式 */
-        .ad-slot {{
-            width: 100%;
-            margin: 30px 0;
-            padding: 16px;
-            background: #fafafa;
-            border: 1px dashed #ddd;
-            border-radius: 8px;
-            text-align: center;
-            color: #999;
-            font-size: 14px;
-        }}
-        .ad-top {{ min-height: 90px; }}
-        .ad-middle {{ min-height: 250px; }}
-        .ad-footer {{ min-height: 90px; }}
-
-        .footer {{
-            text-align: center;
-            margin-top: 40px;
-            color: #999;
-            font-size: 14px;
-        }}
-        
-        /* 加载动画 */
-        .loading {{
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid #3498db;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }}
-        
-        @keyframes spin {{
-            0% {{ transform: rotate(0deg); }}
-            100% {{ transform: rotate(360deg); }}
-        }}
-    </style>
 </head>
 <body>
-<div class="container">
-    <a href="../index.html" class="back-btn">← 返回笑点制造机</a>
-
-    <h1>{title}</h1>
-
-    <!-- 顶部广告位 -->
-    <div class="ad-slot ad-top">
-        <span class="ad-placeholder">广告位（728×90）</span>
+    <!-- 在元数据中显示阅读量 -->
+    <div><span class="label">阅读次数：</span>
+        <span id="comic-views-count">
+            <span class="loading"></span> 统计中...
+        </span>
     </div>
-
-    <div class="meta-info">
-        <div><span class="label">主分类：</span>{category}</div>
-        <div><span class="label">子主题：</span>{sub_topic}</div>
-        <div><span class="label">核心笑点：</span>{funny_example}</div>
-        <div><span class="label">主题标签：</span>{topic}</div>
-        <div>
-            <span class="label">阅读次数：</span>
-            <span id="comic-views-count">
-                <span class="loading"></span> 统计中...
-            </span>
-        </div>
-    </div>
-
-    {img_html}
-
-    <!-- 底部广告位 -->
-    <div class="ad-slot ad-footer">
-        <span class="ad-placeholder">广告位（728×90）</span>
-    </div>
-
-    <div class="footer">
-        © 笑点制造机 · AI辅助创作 · 仅供娱乐
-    </div>
-</div>
 </body>
 </html>
     """
