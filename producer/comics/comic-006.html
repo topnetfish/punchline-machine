@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <!-- 预连接统计服务 -->
+    <link rel="preconnect" href="https://comic-hot-counter.zhouguangzheng.workers.dev">
+    
+    <script>
+
+
+        // 优化统计脚本
+        window.addEventListener('load', function() {
+            // 延迟执行统计，不阻塞页面渲染
+            setTimeout(function() {
+                // 记录阅读量
+                const img = new Image();
+                img.src = `https://comic-hot-counter.zhouguangzheng.workers.dev/hit?id=comic-006`;
+                
+                // 获取并显示阅读量
+                fetch(`https://comic-hot-counter.zhouguangzheng.workers.dev/hit?id=comic-006`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            document.getElementById('comic-views-count').textContent = 
+                                data.data.views.toLocaleString();
+                        }
+                    })
+                    .catch(() => {
+                        // 静默失败
+                    });
+            }, 500); // 延迟500ms执行
+        });
+    </script>
+</head>
+<body>
+    <!-- 在元数据中显示阅读量 -->
+    <div><span class="label">阅读次数：</span>
+        <span id="comic-views-count">
+            <span class="loading"></span> 统计中...
+        </span>
+    </div>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>笑点制造机</title>
+  <style>
+    .comic {
+      border: 1px solid #eee;
+      padding: 12px;
+      margin: 12px 0;
+    }
+    img {
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🔥 最新漫画</h1>
+<div id="comic-list">加载中...</div>
+
+<script>
+fetch("./comic-index.json")
+  .then(res => res.json())
+  .then(data => {
+    const container = document.getElementById("comic-list");
+    container.innerHTML = "";
+
+    data.comics.forEach(c => {
+      const div = document.createElement("div");
+      div.className = "comic";
+      div.innerHTML = `
+        <h3>${c.title}</h3>
+        <p>${c.topic}</p>
+        <a href="./${c.html}">
+          <img src="./${c.img}" />
+        </a>
+      `;
+      container.appendChild(div);
+    });
+  })
+  .catch(err => {
+    document.getElementById("comic-list").innerText = "加载失败";
+    console.error(err);
+  });
+</script>
+
+</body>
+</html>

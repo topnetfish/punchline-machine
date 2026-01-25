@@ -1,0 +1,77 @@
+{
+  "comics": [
+    {
+      "id": "comic-001",
+      "title": "程序员的测试",
+      "topic": "反转型笑话",
+      "img": "img/comic-001-4grid.png",
+      "html": "comics/comic-001.html",
+      "create_time": "2026-01-10 22:02:27"
+    },
+    {
+      "id": "comic-002",
+      "title": "浪费电",
+      "topic": "夏天开空调盖被子，被妈妈吐槽 “浪费电”",
+      "category": "生活日常",
+      "sub_topic": "居家日常",
+      "funny_example": "简单有趣的日常小笑点",
+      "img": "img/comic-002-1.gif",
+      "html": "comics/comic-002.html",
+      "img_count": 1,
+      "has_gif": true,
+      "create_time": "2026-01-17 20:51:42"
+    },
+    {
+      "id": "comic-003",
+      "title": "电",
+      "topic": "夏天开空调盖被子，被妈妈吐槽 “浪费电”",
+      "category": "生活日常",
+      "sub_topic": "居家日常",
+      "funny_example": "简单有趣的日常小笑点",
+      "img": "img/comic-003-1.gif",
+      "html": "comics/comic-003.html",
+      "img_count": 1,
+      "has_gif": true,
+      "create_time": "2026-01-17 22:21:17"
+    },
+    {
+      "id": "comic-004",
+      "title": "猫猫行为",
+      "topic": "猫咪偷喝主人的奶茶，被抓包后装无辜，最后打翻杯子",
+      "category": "生活日常",
+      "sub_topic": "居家日常",
+      "funny_example": "简单有趣的日常小笑点",
+      "img": "img/comic-004-1.gif",
+      "html": "comics/comic-004.html",
+      "img_count": 1,
+      "has_gif": true,
+      "create_time": "2026-01-18 15:38:41"
+    },
+    {
+      "id": "comic-005",
+      "title": "猫猫行为2",
+      "topic": "猫咪2偷喝主人的奶茶，被抓包后装无辜，最后打翻杯子",
+      "category": "生活日常",
+      "sub_topic": "居家日常",
+      "funny_example": "简单有趣的日常小笑点",
+      "img": "img/comic-005-1.gif",
+      "html": "comics/comic-005.html",
+      "img_count": 1,
+      "has_gif": true,
+      "create_time": "2026-01-18 20:45:56"
+    },
+    {
+      "id": "comic-006",
+      "title": "猫猫行为2",
+      "topic": "猫咪2偷喝主人的奶茶，被抓包后装无辜，最后打翻杯子",
+      "category": "生活日常",
+      "sub_topic": "居家日常",
+      "funny_example": "简单有趣的日常小笑点",
+      "img": "img/comic-006-1.gif",
+      "html": "comics/comic-006.html",
+      "img_count": 1,
+      "has_gif": true,
+      "create_time": "2026-01-25 19:55:39"
+    }
+  ]
+}
